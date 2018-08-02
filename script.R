@@ -46,12 +46,15 @@ mega_frame_APC <- data.frame()
 
 for (i in files_list) {
   x <- read.xls(i)
-  name1 <- str_split(i, "/")
-  name3 <- str_split(name1[[1]][4], "_")
-  name2 <- name1[[1]][3]
-  name1 <- name1[[1]][2]
-  name3 <- name3[[1]][1]
-  full_name <- paste(name1, name2, name3)
+  name <- str_split(i, "/") %>% unlist()
+  name1 <- name[2] %>% strsplit(" ") %>% unlist()
+  name1 <- paste0(name1[1], name1[2])
+  name2 <- name[3] %>% strsplit(" ") %>% unlist()
+  name2 <- paste0(name2[1], name2[2])
+  name3 <- str_split(name[4], "_") %>% unlist()
+  name3 <- name3[1] %>% strsplit(" ") %>% unlist()
+  name3 <- paste(name3[1], name3[2], name3[3], sep = "_")
+  full_name <- paste(name1, name2, name3, sep = "_")
   print(full_name)
   
   # delete last rows
@@ -70,7 +73,7 @@ for (i in files_list) {
   frame_data <- data.frame(FITC, APC)
   
   # change col names
-  colnames(frame_data) <- c(paste(full_name, "FITC"), paste(full_name, "APC"))
+  colnames(frame_data) <- c(paste(full_name, "FITC", sep = "_"), paste(full_name, "APC", sep = "_"))
   
   # all merged
   mega_frame <- cbind.fill(mega_frame, frame_data, fill = NA)
@@ -82,12 +85,12 @@ for (i in files_list) {
 
 
 mega_frame <- mega_frame[,-1]
-write.csv(mega_frame, file = "foci_count_merged.csv")
+write.csv2(mega_frame, file = "foci_count_merged.csv", row.names=FALSE)
 
 mega_frame_FITC <- mega_frame_FITC[,-1]
-write.csv(mega_frame_FITC, file = "foci_count_FITC.csv")
+write.csv2(mega_frame_FITC, file = "foci_count_FITC.csv", row.names=FALSE)
 
 mega_frame_APC <- mega_frame_APC[,-1]
-write.csv(mega_frame_APC, file = "foci_count_APC.csv")
+write.csv2(mega_frame_APC, file = "foci_count_APC.csv", row.names=FALSE)
 
 
