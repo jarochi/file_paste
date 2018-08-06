@@ -102,13 +102,13 @@ write.csv2(mega_frame_FITC, file = "foci_count_FITC.csv", row.names=FALSE)
 mega_frame_APC <- mega_frame_APC[,-1]
 write.csv2(mega_frame_APC, file = "foci_count_APC.csv", row.names=FALSE)
 
-foci_count_APC <- read.csv2("foci_count_APC.csv")
+# foci_count_APC <- read.csv2("foci_count_APC.csv")
 save(mega_frame_APC, file = "foci_count_APC.rda")
 
-foci_count_APC <- read.csv2("foci_count_FITC.csv")
+# foci_count_APC <- read.csv2("foci_count_FITC.csv")
 save(mega_frame_FITC, file = "foci_count_FITC.rda")
 
 
-foci_count_APC <- read.csv2("foci_count_merged.csv")
+# foci_count_APC <- read.csv2("foci_count_merged.csv")
 save(mega_frame, file = "foci_count_merged.rda")
 
