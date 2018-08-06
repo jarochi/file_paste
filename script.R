@@ -1,5 +1,6 @@
 library(tidyverse)
 library(gdata)
+library(rowr)
 
 # fetch names lymphoX_af_15 DMSo C
 
@@ -48,12 +49,20 @@ for (i in files_list) {
   x <- read.xls(i)
   name <- str_split(i, "/") %>% unlist()
   name1 <- name[2] %>% strsplit(" ") %>% unlist()
-  name1 <- paste0(name1[1], name1[2])
+  # name1 <- paste0(name1[1], name1[2])
+  name1 <- paste0("L", name1[2])
   name2 <- name[3] %>% strsplit(" ") %>% unlist()
+  name2 <- substr(name2, 1, 1)
   name2 <- paste0(name2[1], name2[2])
   name3 <- str_split(name[4], "_") %>% unlist()
   name3 <- name3[1] %>% strsplit(" ") %>% unlist()
-  name3 <- paste(name3[1], name3[2], name3[3], sep = "_")
+  
+  if(is.na(name3[3]) == TRUE){
+    name3 <- paste(name3[2], name3[1], sep = "_")
+  }
+  else{
+  name3 <- paste(name3[2], name3[3], name3[1], sep = "_")
+  }
   full_name <- paste(name1, name2, name3, sep = "_")
   print(full_name)
   
@@ -93,4 +102,13 @@ write.csv2(mega_frame_FITC, file = "foci_count_FITC.csv", row.names=FALSE)
 mega_frame_APC <- mega_frame_APC[,-1]
 write.csv2(mega_frame_APC, file = "foci_count_APC.csv", row.names=FALSE)
 
+foci_count_APC <- read.csv2("foci_count_APC.csv")
+saveRDS(foci_count_APC, file = "foci_count_APC.Rdata")
+
+foci_count_APC <- read.csv2("foci_count_FITC.csv")
+saveRDS(foci_count_APC, file = "foci_count_FITC.Rdata")
+
+
+foci_count_APC <- read.csv2("foci_count_merged.csv")
+saveRDS(foci_count_APC, file = "foci_count_merged.Rdata")
 
