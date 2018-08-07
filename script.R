@@ -1,6 +1,7 @@
 library(tidyverse)
 library(gdata)
 library(rowr)
+library(readxl)
 
 # fetch names lymphoX_af_15 DMSo C
 
@@ -46,7 +47,8 @@ mega_frame_APC <- data.frame()
 
 
 for (i in files_list) {
-  x <- read.xls(i)
+  # x <- read.xls(i)
+  x <- read_excel(i)
   name <- str_split(i, "/") %>% unlist()
   name1 <- name[2] %>% strsplit(" ") %>% unlist()
   # name1 <- paste0(name1[1], name1[2])
@@ -75,8 +77,10 @@ for (i in files_list) {
   z <- z[-c(1, 2),]
   
   # select foci columns
-  FITC <- z$Marker..1..FITC.
-  APC <- z$Marker..2..APC.
+  # FITC <- z$Marker..1..FITC.
+  # APC <- z$Marker..2..APC.
+  FITC <- z$`Marker: 1 (FITC)`
+  APC <- z$`Marker: 2 (APC)`
   
   # create data frame and change names
   frame_data <- data.frame(FITC, APC)
@@ -91,16 +95,18 @@ for (i in files_list) {
   # only APC marker
   mega_frame_APC <- cbind.fill(mega_frame_APC, frame_data[2], fill = NA)
 }
+nr <- nrow(mega_frame)
+nr1 <- nrow(mega_frame_APC)
+nr2 <- nrow(mega_frame_FITC)
 
+foci_count <- mega_frame[-nr,-1]
+write.csv2(foci_count, file = "foci_count.csv", row.names=FALSE)
 
-foci_count_merged <- mega_frame[,-1]
-# write.csv2(mega_frame, file = "foci_count_merged.csv", row.names=FALSE)
+foci_count_FITC <- mega_frame_FITC[-nr2,-1]
+write.csv2(foci_count_FITC, file = "foci_count_FITC.csv", row.names=FALSE)
 
-foci_count_FITC <- mega_frame_FITC[,-1]
-# write.csv2(mega_frame_FITC, file = "foci_count_FITC.csv", row.names=FALSE)
-
-foci_count_APC <- mega_frame_APC[,-1]
-# write.csv2(mega_frame_APC, file = "foci_count_APC.csv", row.names=FALSE)
+foci_count_APC <- mega_frame_APC[-nr1,-1]
+write.csv2(foci_count_APC, file = "foci_count_APC.csv", row.names=FALSE)
 
 # foci_count_APC <- read.csv2("foci_count_APC.csv")
 save(foci_count_APC, file = "foci_count_APC.rda")
@@ -110,5 +116,5 @@ save(foci_count_FITC, file = "foci_count_FITC.rda")
 
 
 # foci_count_APC <- read.csv2("foci_count_merged.csv")
-save(foci_count_merged, file = "foci_count_merged.rda")
+save(foci_count, file = "foci_count.rda")
 
